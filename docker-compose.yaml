@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  api:
+    container_name: bng_api_events
+    image: node:18-alpine
+    user: node
+    working_dir: /home/node
+    env_file: .env
+    ports:
+      - 9002:9000
+    volumes:
+      - .:/home/node
+    command: /bin/sh -c "npm i && npm run start:dev"
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.events.rule=PathPrefix(`/events`)'
+    networks:
+      - bng
+
+  db:
+    container_name: bng_db_events
+    image: postgres:13-alpine
+    ports:
+      - 54322:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    volumes:
+      - bng-events-db-data:/var/lib/postgresql/data:rw
+
+volumes:
+  bng-events-db-data: {}
+
+networks:
+  bng:
+    external: true
