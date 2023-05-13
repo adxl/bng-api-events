@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  events-api-services:
+  events-api-service:
     image: adxl/bng-api-events:latest
     environment:
       STAGE: production
@@ -12,7 +12,7 @@ services:
     deploy:
       replicas: 3
 
-  events-db-services:
+  events-db-service:
     image: adxl/bng-db-events:latest
     environment:
       POSTGRES_USER: '@DB_USER@'
