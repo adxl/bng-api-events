@@ -3,6 +3,9 @@ version: '3'
 services:
   events-api-services:
     image: adxl/bng-api-events:latest
+    environment:
+      STAGE: production
+      DATABASE_URL: '@DATABASE_URL@'
     networks:
       - bng
       - default
@@ -12,9 +15,9 @@ services:
   events-db-services:
     image: adxl/bng-db-events:latest
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: '@DB_USER@'
+      POSTGRES_PASSWORD: '@DB_PASSWORD@'
+      POSTGRES_DB: '@DB_NAME@'
     networks:
       - default
     deploy:
@@ -25,4 +28,3 @@ networks:
     driver: overlay
   bng:
     external: true
-
