@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  api:
+  events-api-service:
     image: adxl/bng-api-events:latest
     build:
       context: .
       target: production
 
-  db:
+  events-db-service:
     image: adxl/bng-db-events:latest
     build:
       context: .
