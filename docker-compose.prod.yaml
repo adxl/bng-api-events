@@ -6,9 +6,3 @@ services:
     build:
       context: .
       target: production
-
-  events-db-service:
-    image: adxl/bng-db-events:latest
-    build:
-      context: .
-      dockerfile: Dockerfile.db
