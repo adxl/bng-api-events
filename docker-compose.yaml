@@ -14,9 +14,7 @@ services:
       - bng
 
   events-db-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.db
+    image: postgresql:13-alpine
     ports:
       - 54322:5432
     environment:
