@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { EventWinner } from '../events-winners/events-winners.entity';
 
 @Entity()
 export class Event {
@@ -14,9 +15,9 @@ export class Event {
   @Column({ type: 'timestamp', nullable: true })
   endedAt: Date | null;
 
-  @Column({ type: 'int', unsigned: true, default: 0 })
-  capacity: number;
-
   @Column('uuid')
   stationId: string;
+
+  @OneToMany(() => EventWinner, (eventWinner) => eventWinner.event)
+  winners: EventWinner[];
 }
