@@ -18,4 +18,9 @@ export class EventsController {
   findAll(): Promise<Event[]> {
     return this.eventsService.findAll();
   }
+
+  @EventPattern('events.findOne')
+  findOne(id: string): Promise<Event> {
+    return this.eventsService.findOne(id);
+  }
 }
