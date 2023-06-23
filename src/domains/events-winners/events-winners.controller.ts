@@ -3,7 +3,6 @@ import { EventsWinnersService } from './events-winners.service';
 import {
   CreateEventWinnerDto,
   FindOneEventWinnerDtoWrapper,
-  RemoveEventWinnerDto,
   RemoveEventWinnerDtoWrapper,
   UpdateEventWinnerDtoWrapper,
 } from './events-winners.dto';

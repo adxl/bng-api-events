@@ -10,7 +10,6 @@ import {
 } from './events-winners.dto';
 import { EventsService } from '../events/events.service';
 import { RpcException } from '@nestjs/microservices';
-import { DeleteAclFilterResponses } from '@nestjs/microservices/external/kafka.interface';
 
 @Injectable()
 export class EventsWinnersService {
