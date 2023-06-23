@@ -1,18 +1,13 @@
 import { BadRequestException, Controller } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { EventPattern, RpcException } from '@nestjs/microservices';
-import { CreateEventDto, UpdateEventDtoWrapper } from './events.dto';
-import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
+import { UpdateEventDtoWrapper } from './events.dto';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { Event } from './events.entity';
 
 @Controller()
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
-
-  @EventPattern('events.create')
-  create(data: CreateEventDto): Promise<InsertResult> {
-    return this.eventsService.create(data);
-  }
 
   @EventPattern('events.findAll')
   findAll(): Promise<Event[]> {

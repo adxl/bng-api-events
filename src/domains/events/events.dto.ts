@@ -22,10 +22,6 @@ export class UpdateEventDto {
   @IsOptional()
   //@MinDate(new Date()) //TODO: custom min date validator
   endedAt?: Date;
-
-  @IsUUID(4)
-  @IsOptional()
-  stationId?: string;
 }
 
 export class UpdateEventDtoWrapper {

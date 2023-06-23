@@ -1,13 +1,8 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventWinner } from './events-winners.entity';
-import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
-import {
-  CreateEventWinnerDto,
-  FindOneEventWinnerDto,
-  RemoveEventWinnerDto,
-  UpdateEventWinnerDto,
-} from './events-winners.dto';
+import { InsertResult, Repository, UpdateResult } from 'typeorm';
+import { CreateEventWinnerDto, FindOneEventWinnerDto, UpdateEventWinnerDto } from './events-winners.dto';
 import { EventsService } from '../events/events.service';
 import { RpcException } from '@nestjs/microservices';
 
@@ -49,6 +44,7 @@ export class EventsWinnersService {
     if (!eventNow) {
       throw new RpcException(new NotFoundException(`Event ${event} with rank ${data.rank} not found`));
     }
+    //todo check if user not exist in event
     return this.eventWinnerRepository.update(
       {
         eventId: event,
@@ -58,17 +54,6 @@ export class EventsWinnersService {
         ...data,
       },
     );
-  }
-
-  async remove(event: string, data: RemoveEventWinnerDto): Promise<DeleteResult> {
-    const eventNow = await this.findOne(event, data);
-    if (!eventNow) {
-      throw new RpcException(new NotFoundException(`Event ${event} with rank ${data.rank} not found`));
-    }
-    return this.eventWinnerRepository.delete({
-      eventId: event,
-      rank: data.rank,
-    });
   }
 
   async getByUser(userId: string): Promise<any> {

@@ -8,9 +8,6 @@ export class CreateEventWinnerDto {
   @IsNotEmptyObject()
   event: EntityReference;
 
-  @IsUUID(4)
-  userId: string;
-
   @IsInt()
   @Min(1)
   @Max(3)
@@ -51,20 +48,4 @@ export class FindOneEventWinnerDtoWrapper {
   @ValidateNested()
   @Type(() => FindOneEventWinnerDto)
   body: FindOneEventWinnerDto;
-}
-
-export class RemoveEventWinnerDto {
-  @IsInt()
-  @Min(1)
-  @Max(3)
-  rank: number;
-}
-
-export class RemoveEventWinnerDtoWrapper {
-  @IsUUID(4)
-  event: string;
-
-  @ValidateNested()
-  @Type(() => RemoveEventWinnerDto)
-  body: RemoveEventWinnerDto;
 }

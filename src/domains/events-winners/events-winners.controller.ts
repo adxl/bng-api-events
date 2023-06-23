@@ -1,12 +1,7 @@
 import { EventPattern, RpcException } from '@nestjs/microservices';
 import { EventsWinnersService } from './events-winners.service';
-import {
-  CreateEventWinnerDto,
-  FindOneEventWinnerDtoWrapper,
-  RemoveEventWinnerDtoWrapper,
-  UpdateEventWinnerDtoWrapper,
-} from './events-winners.dto';
-import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
+import { CreateEventWinnerDto, FindOneEventWinnerDtoWrapper, UpdateEventWinnerDtoWrapper } from './events-winners.dto';
+import { InsertResult, UpdateResult } from 'typeorm';
 import { BadRequestException, Controller } from '@nestjs/common';
 import { EventWinner } from './events-winners.entity';
 @Controller()
@@ -34,11 +29,6 @@ export class EventsWinnersController {
       throw new RpcException(new BadRequestException('Payload must not be empty'));
     }
     return this.eventsWinnersService.update(data.event, data.body);
-  }
-
-  @EventPattern('eventsWinners.remove')
-  remove(data: RemoveEventWinnerDtoWrapper): Promise<DeleteResult> {
-    return this.eventsWinnersService.remove(data.event, data.body);
   }
 
   @EventPattern('eventsWinners.getByUser')
