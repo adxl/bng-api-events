@@ -44,6 +44,14 @@ export class EventsWinnersService {
     if (!eventNow) {
       throw new RpcException(new NotFoundException(`Event ${event} with rank ${data.rank} not found`));
     }
+    const EventList = await this.findAll();
+    EventList.forEach((eventOne) => {
+      if (eventOne.userId === data.userId && eventOne.eventId === eventNow.eventId) {
+        throw new RpcException(
+          new NotFoundException(`User ${eventOne.userId} already exist in event ${eventOne.eventId}`),
+        );
+      }
+    });
     //todo check if user not exist in event
     return this.eventWinnerRepository.update(
       {

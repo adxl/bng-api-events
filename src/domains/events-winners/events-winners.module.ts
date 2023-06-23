@@ -10,4 +10,4 @@ import { EventsService } from '../events/events.service';
   providers: [EventsWinnersService, EventsService],
   controllers: [EventsWinnersController],
 })
-export class EventsWinnnersModule {}
+export class EventsWinnersModule {}

@@ -1,29 +1,45 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Event } from './events.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
 import { CreateEventDto, UpdateEventDto } from './events.dto';
 import { RpcException } from '@nestjs/microservices';
+import { EventsWinnersService } from '../events-winners/events-winners.service';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event)
-    private readonly eventRepository: Repository<Event>,
+    private readonly eventRepository: Repository<Event>, // @Inject(EventsWinnersService) private readonly eventsWinnersService: EventsWinnersService,
   ) {}
 
   async create(data: CreateEventDto): Promise<InsertResult> {
-    return this.eventRepository.insert(data);
+    const event = await this.eventRepository.insert(data);
+    // for (let i = 1; i <= 3; i++) {
+    //   const eventWinner = {
+    //     event: event.identifiers[0].id,
+    //     rank: i,
+    //   };
+    //   await this.eventsWinnersService.create(eventWinner);
+    // }
+    return event;
   }
 
   async findAll(): Promise<Event[]> {
-    return this.eventRepository.find();
+    return this.eventRepository.find({
+      relations: {
+        winners: true,
+      },
+    });
   }
 
   async findOne(id: string): Promise<Event> {
     const data = await this.eventRepository.findOne({
       where: {
         id,
+      },
+      relations: {
+        winners: true,
       },
     });
     if (!data) {
@@ -33,18 +49,12 @@ export class EventsService {
   }
 
   async update(id: string, data: UpdateEventDto): Promise<UpdateResult> {
-    const event = await this.findOne(id);
-    if (!event) {
-      throw new RpcException(new NotFoundException(`Event ${id} not found`));
-    }
-    return this.eventRepository.update(event.id, data);
+    await this.findOne(id);
+    return this.eventRepository.update(id, data);
   }
 
   async remove(id: string): Promise<DeleteResult> {
-    const event = await this.findOne(id);
-    if (!event) {
-      throw new RpcException(new NotFoundException(`Event ${id} not found`));
-    }
-    return this.eventRepository.delete(event.id);
+    await this.findOne(id);
+    return this.eventRepository.delete(id);
   }
 }
