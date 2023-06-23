@@ -8,9 +8,6 @@ export class CreateEventDto {
   //@MinDate(new Date()) //TODO: custom min date validator
   startsAt: Date;
 
-  @IsPositive()
-  capacity: number;
-
   @IsUUID()
   stationId: string;
 }

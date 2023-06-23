@@ -3,6 +3,7 @@ import { EventsService } from './events.service';
 import { EventPattern } from '@nestjs/microservices';
 import { CreateEventDto } from './events.dto';
 import { InsertResult } from 'typeorm';
+import { Event } from './events.entity';
 
 @Controller()
 export class EventsController {
@@ -11,5 +12,10 @@ export class EventsController {
   @EventPattern('events.create')
   create(data: CreateEventDto): Promise<InsertResult> {
     return this.eventsService.create(data);
+  }
+
+  @EventPattern('events.findAll')
+  findAll(): Promise<Event[]> {
+    return this.eventsService.findAll();
   }
 }

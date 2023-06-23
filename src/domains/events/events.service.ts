@@ -14,4 +14,8 @@ export class EventsService {
   async create(data: CreateEventDto): Promise<InsertResult> {
     return this.eventRepository.insert(data);
   }
+
+  async findAll(): Promise<Event[]> {
+    return this.eventRepository.find();
+  }
 }
