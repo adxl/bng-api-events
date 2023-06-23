@@ -2,7 +2,7 @@ import { BadRequestException, Controller } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { EventPattern, RpcException } from '@nestjs/microservices';
 import { CreateEventDto, UpdateEventDtoWrapper } from './events.dto';
-import { InsertResult, UpdateResult } from 'typeorm';
+import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 import { Event } from './events.entity';
 
 @Controller()
@@ -30,5 +30,10 @@ export class EventsController {
       throw new RpcException(new BadRequestException('Payload must not be empty'));
     }
     return this.eventsService.update(data.id, data.body);
+  }
+
+  @EventPattern('events.remove')
+  remove(id: string): Promise<DeleteResult> {
+    return this.eventsService.remove(id);
   }
 }

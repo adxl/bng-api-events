@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Event } from './events.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { InsertResult, Repository, UpdateResult } from 'typeorm';
-import { CreateEventDto, UpdateEventDto, UpdateEventDtoWrapper } from './events.dto';
+import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
+import { CreateEventDto, UpdateEventDto } from './events.dto';
 import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
@@ -21,13 +21,13 @@ export class EventsService {
   }
 
   async findOne(id: string): Promise<Event> {
-    const data = this.eventRepository.findOne({
+    const data = await this.eventRepository.findOne({
       where: {
         id,
       },
     });
     if (!data) {
-      throw new RpcException(new NotFoundException());
+      throw new RpcException(new NotFoundException(`Event ${id} not found`));
     }
     return data;
   }
@@ -38,5 +38,13 @@ export class EventsService {
       throw new RpcException(new NotFoundException(`Event ${id} not found`));
     }
     return this.eventRepository.update(event.id, data);
+  }
+
+  async remove(id: string): Promise<DeleteResult> {
+    const event = await this.findOne(id);
+    if (!event) {
+      throw new RpcException(new NotFoundException(`Event ${id} not found`));
+    }
+    return this.eventRepository.delete(event.id);
   }
 }
