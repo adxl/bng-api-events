@@ -40,4 +40,9 @@ export class EventsWinnersController {
   remove(data: RemoveEventWinnerDtoWrapper): Promise<DeleteResult> {
     return this.eventsWinnersService.remove(data.event, data.body);
   }
+
+  @EventPattern('eventsWinners.getByUser')
+  getByUser(id: string): Promise<EventWinner[]> {
+    return this.eventsWinnersService.getByUser(id);
+  }
 }

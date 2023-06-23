@@ -70,4 +70,29 @@ export class EventsWinnersService {
       rank: data.rank,
     });
   }
+
+  async getByUser(userId: string): Promise<any> {
+    const events = await this.eventWinnerRepository.find({
+      where: {
+        userId,
+      },
+    });
+    const result = {
+      firsts: 0,
+      seconds: 0,
+      thirds: 0,
+    };
+    events.forEach((event) => {
+      if (event.rank === 1) {
+        result.firsts += 1;
+      }
+      if (event.rank === 2) {
+        result.seconds += 1;
+      }
+      if (event.rank === 3) {
+        result.thirds += 1;
+      }
+    });
+    return result;
+  }
 }
