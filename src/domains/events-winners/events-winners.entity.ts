@@ -10,7 +10,7 @@ export class EventWinner {
   @JoinColumn([{ name: 'eventId', referencedColumnName: 'id' }])
   event: Event;
 
-  @Column('uuid')
+  @Column({ type: 'uuid', nullable: true })
   userId: string;
 
   @PrimaryColumn({ type: 'int', name: 'rank' })
