@@ -1,13 +1,14 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventWinner } from './events-winners.entity';
 import { EventsWinnersController } from './events-winners.controller';
 import { EventsWinnersService } from './events-winners.service';
-import { Event } from '../events/events.entity';
-import { EventsService } from '../events/events.service';
+import { EventsModule } from '../events/events.module';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([EventWinner, Event])],
-  providers: [EventsWinnersService, EventsService],
+  imports: [TypeOrmModule.forFeature([EventWinner]), forwardRef(() => EventsModule)],
   controllers: [EventsWinnersController],
+  providers: [EventsWinnersService],
+  exports: [EventsWinnersService],
 })
 export class EventsWinnersModule {}

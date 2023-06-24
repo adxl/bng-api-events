@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { Event } from './events.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
@@ -8,20 +8,24 @@ import { EventsWinnersService } from '../events-winners/events-winners.service';
 
 @Injectable()
 export class EventsService {
-  constructor(
-    @InjectRepository(Event)
-    private readonly eventRepository: Repository<Event>, // @Inject(EventsWinnersService) private readonly eventsWinnersService: EventsWinnersService,
-  ) {}
+  @InjectRepository(Event)
+  private readonly eventRepository: Repository<Event>;
+
+  @Inject(forwardRef(() => EventsWinnersService))
+  private readonly eventsWinnersService: EventsWinnersService;
 
   async create(data: CreateEventDto): Promise<InsertResult> {
     const event = await this.eventRepository.insert(data);
-    // for (let i = 1; i <= 3; i++) {
-    //   const eventWinner = {
-    //     event: event.identifiers[0].id,
-    //     rank: i,
-    //   };
-    //   await this.eventsWinnersService.create(eventWinner);
-    // }
+    const eventWinners = Array(3)
+      .fill(null)
+      .map((_, index) => ({
+        event: {
+          id: event.identifiers[0].id,
+        },
+        rank: index + 1,
+      }));
+    await this.eventsWinnersService.createMany(eventWinners);
+
     return event;
   }
 

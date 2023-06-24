@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventWinner } from './events-winners.entity';
 import { InsertResult, Repository, UpdateResult } from 'typeorm';
@@ -8,13 +8,17 @@ import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class EventsWinnersService {
-  constructor(
-    @InjectRepository(EventWinner)
-    private readonly eventWinnerRepository: Repository<EventWinner>,
-    @Inject(EventsService) private readonly eventsService: EventsService,
-  ) {}
+  @InjectRepository(EventWinner)
+  private readonly eventWinnerRepository: Repository<EventWinner>;
+
+  @Inject(forwardRef(() => EventsService))
+  private readonly eventsService: EventsService;
 
   async create(data: CreateEventWinnerDto): Promise<InsertResult> {
+    return this.eventWinnerRepository.insert(data);
+  }
+
+  async createMany(data: CreateEventWinnerDto[]): Promise<InsertResult> {
     return this.eventWinnerRepository.insert(data);
   }
 
