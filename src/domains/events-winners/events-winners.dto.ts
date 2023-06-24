@@ -33,19 +33,3 @@ export class UpdateEventWinnerDtoWrapper {
   @Type(() => UpdateEventWinnerDto)
   body: UpdateEventWinnerDto;
 }
-
-export class FindOneEventWinnerDto {
-  @IsInt()
-  @Min(1)
-  @Max(3)
-  rank: number;
-}
-
-export class FindOneEventWinnerDtoWrapper {
-  @IsUUID(4)
-  event: string;
-
-  @ValidateNested()
-  @Type(() => FindOneEventWinnerDto)
-  body: FindOneEventWinnerDto;
-}
