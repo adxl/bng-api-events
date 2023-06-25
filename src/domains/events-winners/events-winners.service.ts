@@ -2,7 +2,7 @@ import { ConflictException, Inject, Injectable, forwardRef } from '@nestjs/commo
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventWinner } from './events-winners.entity';
 import { InsertResult, Repository, UpdateResult } from 'typeorm';
-import { CreateEventWinnerDto, UpdateEventWinnerDto } from './events-winners.dto';
+import { CreateEventWinnerDto, EventWinnerStats, UpdateEventWinnerDto } from './events-winners.dto';
 import { EventsService } from '../events/events.service';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class EventsWinnersService {
     );
   }
 
-  async getByUser(userId: string): Promise<any> {
+  async getByUser(userId: string): Promise<EventWinnerStats> {
     const events = await this.eventWinnerRepository.find({
       where: {
         userId,
@@ -55,7 +55,7 @@ export class EventsWinnersService {
       }
       if (event.rank === 2) {
         result.seconds += 1;
-        result.caps += 20;
+        result.caps += 25;
       }
       if (event.rank === 3) {
         result.thirds += 1;

@@ -6,7 +6,6 @@ export class CreateEventDto {
   name: string;
 
   @IsDateString()
-  //@MinDate(new Date()) //TODO: custom min date validator
   startsAt: Date;
 
   @IsUUID(4)
@@ -20,7 +19,6 @@ export class UpdateEventDto {
 
   @IsDateString()
   @IsOptional()
-  //@MinDate(new Date()) //TODO: custom min date validator
   endedAt?: Date;
 }
 

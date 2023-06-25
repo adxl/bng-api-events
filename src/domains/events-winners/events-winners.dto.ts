@@ -33,3 +33,12 @@ export class UpdateEventWinnerDtoWrapper {
   @Type(() => UpdateEventWinnerDto)
   body: UpdateEventWinnerDto;
 }
+
+// ---
+
+export type EventWinnerStats = {
+  firsts: number;
+  seconds: number;
+  thirds: number;
+  caps: number;
+};
