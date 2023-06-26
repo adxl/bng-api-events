@@ -4,13 +4,16 @@ import { EventWinner } from './events-winners.entity';
 import { EventsWinnersController } from './events-winners.controller';
 import { EventsWinnersService } from './events-winners.service';
 import { EventsModule } from '../events/events.module';
-import { AuthGuard } from '../../auth.guard';
-import { AUTH_SERVICE } from '../../constants';
+import { ClientProxy } from '../../config/proxy.config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EventWinner]), forwardRef(() => EventsModule)],
+  imports: [
+    ClientProxy('AUTH_SERVICE', process.env.AUTH_HOST || 'auth-api-service', process.env.AUTH_PORT || '9000'),
+    TypeOrmModule.forFeature([EventWinner]),
+    forwardRef(() => EventsModule),
+  ],
   controllers: [EventsWinnersController],
-  providers: [EventsWinnersService, AuthGuard, AUTH_SERVICE],
-  exports: [EventsWinnersService, AuthGuard, AUTH_SERVICE],
+  providers: [EventsWinnersService],
+  exports: [EventsWinnersService],
 })
 export class EventsWinnersModule {}

@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
-import { IsString, IsUUID, IsDateString, IsOptional, ValidateNested } from 'class-validator';
+import { IsString, IsUUID, IsDateString, IsOptional, ValidateNested, IsNotEmptyObject } from 'class-validator';
+import { RequestPayload } from 'src/types';
 
 export class CreateEventDto {
   @IsString()
@@ -12,6 +13,13 @@ export class CreateEventDto {
   stationId: string;
 }
 
+export class CreateEventPayload extends RequestPayload {
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => CreateEventDto)
+  body: CreateEventDto;
+}
+
 export class UpdateEventDto {
   @IsString()
   @IsOptional()
@@ -22,10 +30,8 @@ export class UpdateEventDto {
   endedAt?: Date;
 }
 
-export class UpdateEventDtoWrapper {
-  @IsUUID(4)
-  id: string;
-
+export class UpdateEventPayload extends RequestPayload {
+  @IsNotEmptyObject()
   @ValidateNested()
   @Type(() => UpdateEventDto)
   body: UpdateEventDto;

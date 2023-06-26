@@ -1,11 +1,12 @@
-import { BadRequestException, Controller, UseGuards } from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { EventsService } from './events.service';
-import { EventPattern, RpcException } from '@nestjs/microservices';
-import { CreateEventDto, UpdateEventDtoWrapper } from './events.dto';
+import { EventPattern, Payload } from '@nestjs/microservices';
+import { CreateEventPayload, UpdateEventPayload } from './events.dto';
 import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 import { Event } from './events.entity';
 import { AuthGuard, RolesGuard } from '../../auth.guard';
 import { UserRole } from '../../types/user-role';
+import { RequestPayload } from 'src/types';
 
 @Controller()
 export class EventsController {
@@ -19,28 +20,25 @@ export class EventsController {
 
   @EventPattern('events.findOne')
   @UseGuards(new RolesGuard('*'), AuthGuard)
-  findOne(id: string): Promise<Event> {
-    return this.eventsService.findOne(id);
+  findOne(@Payload() payload: RequestPayload): Promise<Event> {
+    return this.eventsService.findOne(payload.id);
   }
 
   @EventPattern('events.create')
   @UseGuards(new RolesGuard([UserRole.ORGANIZER]), AuthGuard)
-  create(data: CreateEventDto): Promise<InsertResult> {
-    return this.eventsService.create(data);
+  create(@Payload() payload: CreateEventPayload): Promise<InsertResult> {
+    return this.eventsService.create(payload.body);
   }
 
   @EventPattern('events.update')
   @UseGuards(new RolesGuard([UserRole.ORGANIZER]), AuthGuard)
-  update(data: UpdateEventDtoWrapper): Promise<UpdateResult> {
-    if (Object.keys(data.body).length === 0) {
-      throw new RpcException(new BadRequestException('Payload must not be empty'));
-    }
-    return this.eventsService.update(data.id, data.body);
+  update(@Payload() payload: UpdateEventPayload): Promise<UpdateResult> {
+    return this.eventsService.update(payload.id, payload.body);
   }
 
   @EventPattern('events.remove')
-  @UseGuards(new RolesGuard([UserRole.ORGANIZER]), AuthGuard)
-  remove(id: string): Promise<DeleteResult> {
-    return this.eventsService.remove(id);
+  @UseGuards(new RolesGuard([UserRole.ADMINISTRATOR]), AuthGuard)
+  remove(@Payload() payload: RequestPayload): Promise<DeleteResult> {
+    return this.eventsService.remove(payload.id);
   }
 }

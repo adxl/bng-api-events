@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsInt, IsNotEmptyObject, IsOptional, IsUUID, Max, Min, ValidateNested } from 'class-validator';
-import { EntityReference } from '../../types';
+import { EntityReference, RequestPayload } from '../../types';
 
 export class CreateEventWinnerDto {
   @ValidateNested()
@@ -14,6 +14,8 @@ export class CreateEventWinnerDto {
   rank: number;
 }
 
+// ---
+
 export class UpdateEventWinnerDto {
   @IsUUID(4)
   @IsOptional()
@@ -25,10 +27,8 @@ export class UpdateEventWinnerDto {
   rank: number;
 }
 
-export class UpdateEventWinnerDtoWrapper {
-  @IsUUID(4)
-  event: string;
-
+export class UpdateEventWinnerPayload extends RequestPayload {
+  @IsNotEmptyObject()
   @ValidateNested()
   @Type(() => UpdateEventWinnerDto)
   body: UpdateEventWinnerDto;
