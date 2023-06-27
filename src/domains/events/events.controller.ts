@@ -6,7 +6,7 @@ import { DeleteResult, InsertResult, UpdateResult } from 'typeorm';
 import { Event } from './events.entity';
 import { AuthGuard, RolesGuard } from '../../auth.guard';
 import { UserRole } from '../../types/user-role';
-import { RequestPayload } from 'src/types';
+import { RequestPayload } from '../../types';
 
 @Controller()
 export class EventsController {

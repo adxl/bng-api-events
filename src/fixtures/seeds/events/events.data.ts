@@ -1,4 +1,4 @@
-import { Event } from 'src/domains/events/events.entity';
+import { Event } from '../../../domains/events/events.entity';
 import { DeepPartial } from 'typeorm';
 
 const stationsMap = [1, 3, 4, 5, 2, 2, 1, 8, 6, 1, 2];

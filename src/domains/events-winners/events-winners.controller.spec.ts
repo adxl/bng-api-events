@@ -7,6 +7,7 @@ import { EventWinner } from './events-winners.entity';
 import { EventsWinnersService } from './events-winners.service';
 import { EventsWinnersModule } from './events-winners.module';
 import { EventsModule } from '../events/events.module';
+import { ClientProxy } from '../../config/proxy.config';
 
 describe('Tests events winners', () => {
   let winnersController: EventsWinnersController;
@@ -16,6 +17,7 @@ describe('Tests events winners', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        ClientProxy('AUTH_SERVICE', process.env.AUTH_HOST || 'auth-api-service', process.env.AUTH_PORT || '9000'),
         TypeOrmModule.forRoot(TypeOrmConfig),
         TypeOrmModule.forFeature([EventWinner]),
         EventsModule,
@@ -36,7 +38,7 @@ describe('Tests events winners', () => {
   describe('Test update winner', () => {
     it('should return the number of affected resources', async () => {
       const data = {
-        event: '77777777-06e5-4e9e-aa76-d7e12eba4a06',
+        id: '77777777-06e5-4e9e-aa76-d7e12eba4a06',
         body: {
           userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd005',
           rank: 2,

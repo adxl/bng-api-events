@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsString, IsUUID, IsDateString, IsOptional, ValidateNested, IsNotEmptyObject } from 'class-validator';
-import { RequestPayload } from 'src/types';
+import { RequestPayload } from '../../types';
 
 export class CreateEventDto {
   @IsString()

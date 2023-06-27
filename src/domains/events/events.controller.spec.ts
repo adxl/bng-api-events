@@ -6,6 +6,7 @@ import { EventsController } from './events.controller';
 import { Event } from './events.entity';
 import { EventsModule } from './events.module';
 import { EventsService } from './events.service';
+import { ClientProxy } from '../../config/proxy.config';
 
 describe('Tests events', () => {
   let eventsController: EventsController;
@@ -13,6 +14,7 @@ describe('Tests events', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        ClientProxy('AUTH_SERVICE', process.env.AUTH_HOST || 'auth-api-service', process.env.AUTH_PORT || '9000'),
         TypeOrmModule.forRoot(TypeOrmConfig),
         TypeOrmModule.forFeature([Event]),
         EventsModule,
@@ -35,23 +37,23 @@ describe('Tests events', () => {
   describe('Test find one event', () => {
     it('should return one event', async () => {
       const eventTitle = 'Event 4';
-      const event = await eventsController.findOne('77777777-06e5-4e9e-aa76-d7e12eba4a04');
+      const event = await eventsController.findOne({ id: '77777777-06e5-4e9e-aa76-d7e12eba4a04' });
       expect(event.name).toEqual(eventTitle);
     });
 
     it('should throws a not found exception', async () => {
-      await expect(eventsController.findOne('77777777-06e5-4e9e-aa76-d7e12eba4a99')).rejects.toThrow();
+      await expect(eventsController.findOne({ id: '77777777-06e5-4e9e-aa76-d7e12eba4a99' })).rejects.toThrow();
     });
   });
 
   describe('Test create event', () => {
     it('should return an UUID', async () => {
-      const data = {
+      const body = {
         name: 'Test circuit de course',
         startsAt: new Date(),
         stationId: '11111111-bab3-439d-965d-0522568b0008',
       };
-      expect((await eventsController.create(data)).identifiers[0].id).toHaveLength(36);
+      expect((await eventsController.create({ body })).identifiers[0].id).toHaveLength(36);
     });
   });
 
@@ -69,8 +71,8 @@ describe('Tests events', () => {
 
   describe('Test remove one event', () => {
     it('should return the number of affected resources', async () => {
-      const data = '77777777-06e5-4e9e-aa76-d7e12eba4a05';
-      expect((await eventsController.remove(data)).affected).toEqual(1);
+      const id = '77777777-06e5-4e9e-aa76-d7e12eba4a05';
+      expect((await eventsController.remove({ id })).affected).toEqual(1);
     });
   });
 });

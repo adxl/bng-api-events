@@ -5,7 +5,7 @@ import { UpdateResult } from 'typeorm';
 import { Controller, UseGuards } from '@nestjs/common';
 import { AuthGuard, RolesGuard } from '../../auth.guard';
 import { UserRole } from '../../types/user-role';
-import { RequestPayload } from 'src/types';
+import { RequestPayload } from '../../types';
 
 @Controller()
 export class EventsWinnersController {
