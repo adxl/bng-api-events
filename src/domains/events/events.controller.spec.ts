@@ -36,9 +36,9 @@ describe('Tests events', () => {
 
   describe('Test find one event', () => {
     it('should return one event', async () => {
-      const eventTitle = 'Event 4';
+      const eventStation = '11111111-bab3-439d-965d-0522568b0005';
       const event = await eventsController.findOne({ id: '77777777-06e5-4e9e-aa76-d7e12eba4a04' });
-      expect(event.name).toEqual(eventTitle);
+      expect(event.stationId).toEqual(eventStation);
     });
 
     it('should throws a not found exception', async () => {
