@@ -37,7 +37,7 @@ export class EventsController {
   }
 
   @EventPattern('events.remove')
-  @UseGuards(new RolesGuard([UserRole.ADMINISTRATOR]), AuthGuard)
+  @UseGuards(new RolesGuard([UserRole.ORGANIZER]), AuthGuard)
   remove(@Payload() payload: RequestPayload): Promise<DeleteResult> {
     return this.eventsService.remove(payload.id);
   }
