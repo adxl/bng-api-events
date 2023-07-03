@@ -10,6 +10,7 @@ import {
 } from './events-winners.dto';
 import { EventsService } from '../events/events.service';
 import { ClientProxy } from '@nestjs/microservices';
+import { catchError, firstValueFrom, of } from 'rxjs';
 
 @Injectable()
 export class EventsWinnersService {
@@ -49,11 +50,15 @@ export class EventsWinnersService {
       body.caps += 10;
     }
 
-    await this.authProxy.send('users.updateCaps', {
-      id: data.userId,
-      body,
-      token: payload.token,
-    });
+    const observableResponse = this.authProxy
+      .send('users.updateCaps', {
+        id: data.userId,
+        body,
+        token: payload.token,
+      })
+      .pipe(catchError((error) => of(error)));
+
+    await firstValueFrom(observableResponse);
 
     return this.eventWinnerRepository.update(
       {
