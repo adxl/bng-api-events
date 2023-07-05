@@ -14,7 +14,7 @@ export class EventsWinnersController {
   @EventPattern('eventsWinners.update')
   @UseGuards(new RolesGuard([UserRole.ORGANIZER]), AuthGuard)
   update(@Payload() payload: UpdateEventWinnerPayload): Promise<UpdateResult> {
-    return this.eventsWinnersService.update(payload.id, payload.body);
+    return this.eventsWinnersService.update(payload);
   }
 
   @EventPattern('eventsWinners.getByUser')

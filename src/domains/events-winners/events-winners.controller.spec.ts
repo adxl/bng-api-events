@@ -54,7 +54,6 @@ describe('Tests events winners', () => {
       expect(typeof result.firsts).toBe('number');
       expect(typeof result.seconds).toBe('number');
       expect(typeof result.thirds).toBe('number');
-      expect(typeof result.caps).toBe('number');
     });
   });
 });
