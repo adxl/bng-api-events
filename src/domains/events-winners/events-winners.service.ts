@@ -27,48 +27,41 @@ export class EventsWinnersService {
     return this.eventWinnerRepository.insert(data);
   }
 
-  async update(payload: UpdateEventWinnerPayload): Promise<UpdateResult> {
+  async update(payload: UpdateEventWinnerPayload): Promise<null> {
     const eventId: string = payload.id;
     const data: UpdateEventWinnerDto = payload.body;
 
-    const event = await this.eventsService.findOne(eventId);
-    if (Object.values(event.winners).find((winner) => winner.userId === data.userId)) {
-      throw new ConflictException(`User ${data.userId} already exist in event ${eventId}`);
+    await this.eventsService.findOne(eventId);
+
+    if (
+      Array.from(new Set(data.winners.map((w) => w.rank))).length !== 3 ||
+      Array.from(new Set(data.winners.map((w) => w.userId))).length !== 3
+    ) {
+      throw new ConflictException(`Duplicated ranks or users`);
     }
 
-    const body = {
-      caps: 0,
-    };
+    data.winners.forEach(async (winner) => {
+      await firstValueFrom(
+        this.authProxy
+          .send('users.updateCaps', {
+            id: winner.userId,
+            body: { caps: 40 - winner.rank * 10 },
+            token: payload.token,
+          })
+          .pipe(catchError((error) => of(error))),
+      );
+      await this.eventWinnerRepository.update(
+        {
+          eventId: eventId,
+          rank: winner.rank,
+        },
+        {
+          userId: winner.userId,
+        },
+      );
+    });
 
-    if (data.rank === 1) {
-      body.caps += 50;
-    }
-    if (data.rank === 2) {
-      body.caps += 25;
-    }
-    if (data.rank === 3) {
-      body.caps += 10;
-    }
-
-    const observableResponse = this.authProxy
-      .send('users.updateCaps', {
-        id: data.userId,
-        body,
-        token: payload.token,
-      })
-      .pipe(catchError((error) => of(error)));
-
-    await firstValueFrom(observableResponse);
-
-    return this.eventWinnerRepository.update(
-      {
-        eventId: eventId,
-        rank: data.rank,
-      },
-      {
-        userId: data.userId,
-      },
-    );
+    return null;
   }
 
   async getByUser(userId: string): Promise<EventWinnerStats> {

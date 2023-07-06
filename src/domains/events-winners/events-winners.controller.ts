@@ -1,7 +1,6 @@
 import { EventPattern, Payload } from '@nestjs/microservices';
 import { EventsWinnersService } from './events-winners.service';
 import { EventWinnerStats, UpdateEventWinnerPayload } from './events-winners.dto';
-import { UpdateResult } from 'typeorm';
 import { Controller, UseGuards } from '@nestjs/common';
 import { AuthGuard, RolesGuard } from '../../auth.guard';
 import { UserRole } from '../../types/user-role';
@@ -13,7 +12,7 @@ export class EventsWinnersController {
 
   @EventPattern('eventsWinners.update')
   @UseGuards(new RolesGuard([UserRole.ORGANIZER]), AuthGuard)
-  update(@Payload() payload: UpdateEventWinnerPayload): Promise<UpdateResult> {
+  update(@Payload() payload: UpdateEventWinnerPayload): Promise<null> {
     return this.eventsWinnersService.update(payload);
   }
 

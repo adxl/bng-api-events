@@ -1,5 +1,15 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsNotEmptyObject, IsOptional, IsUUID, Max, Min, ValidateNested } from 'class-validator';
+import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsInt,
+  IsNotEmptyObject,
+  IsOptional,
+  IsUUID,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 import { EntityReference, RequestPayload } from '../../types';
 
 export class CreateEventWinnerDto {
@@ -16,15 +26,22 @@ export class CreateEventWinnerDto {
 
 // ---
 
-export class UpdateEventWinnerDto {
+export class Winner {
   @IsUUID(4)
-  @IsOptional()
   userId: string;
 
   @IsInt()
   @Min(1)
   @Max(3)
   rank: number;
+}
+
+export class UpdateEventWinnerDto {
+  @ValidateNested()
+  @Type(() => Winner)
+  @ArrayMinSize(3)
+  @ArrayMaxSize(3)
+  winners: Winner[];
 }
 
 export class UpdateEventWinnerPayload extends RequestPayload {
