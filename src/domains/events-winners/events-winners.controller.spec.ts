@@ -40,11 +40,23 @@ describe('Tests events winners', () => {
       const data = {
         id: '77777777-06e5-4e9e-aa76-d7e12eba4a06',
         body: {
-          userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd005',
-          rank: 2,
+          winners: [
+            {
+              userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd005',
+              rank: 1,
+            },
+            {
+              userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd006',
+              rank: 2,
+            },
+            {
+              userId: 'c63a4bd1-cabd-44ee-b911-9ee2533dd007',
+              rank: 3,
+            },
+          ],
         },
       };
-      expect((await winnersController.update(data)).affected).toEqual(1);
+      expect(await winnersController.update(data)).toBe(null);
     });
   });
 
